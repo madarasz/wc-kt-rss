@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options
 from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 import time
@@ -14,18 +14,15 @@ import pytz
 # URL of the website to scrape
 url = 'https://www.warhammer-community.com/kill-team/'
 
-# Set up Chrome options for headless mode
-chrome_options = Options()
-# chrome_options.add_argument("--headless") TODO: fix this
-chrome_options.add_argument("--window-size=1920,1080")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3")
 
-# Initialize WebDriver in headless mode
-driver = webdriver.Chrome(options=chrome_options)
+firefox_options = Options()
+firefox_options.add_argument("--headless")
+
+driver = webdriver.Firefox(options=firefox_options)
 
 # Load the page
 driver.get(url)
+driver.save_screenshot("screenshot.png")
 
 try:
     WebDriverWait(driver, 10).until(

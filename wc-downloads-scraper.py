@@ -21,7 +21,7 @@ def wait_element(element):
         driver.quit()
 
 # URL of the website to scrape
-url = 'https://www.goonhammer.com/category/core-games/kill-team/'
+url = 'https://www.warhammer-community.com/kill-team-downloads/'
 
 firefox_options = Options()
 firefox_options.add_argument("--headless")
@@ -31,8 +31,8 @@ driver = webdriver.Firefox(options=firefox_options)
 
 # Load the page
 driver.get(url)
-driver.save_screenshot("screenshot-gh.png")
-wait_element("div.td-big-grid-post")
+driver.save_screenshot("screenshot-wcd.png")
+wait_element("resources-groups")
 
 # Get page source and close the driver
 source = driver.page_source
@@ -41,38 +41,40 @@ source = driver.page_source
 soup = BeautifulSoup(source, 'html.parser')
 
 # Extract news items
-news_items = soup.find_all('div', class_='td-big-grid-post')
+keyres = soup.find('div', class_='resources-groups')
+items = keyres.find_all('div', class_='resources-list__item')
 
 # Create RSS feed
 fg = FeedGenerator()
-fg.title('Goonhammer - Kill Team')
-fg.description('Kill Team posts')
+fg.title('Balance Dataslate - Kill Team')
+fg.description('Balance dataslate update')
 fg.link(href=url, rel='alternate')
 
-for item in news_items:
-    title = item.find('a')['title'] if item.find('a') else 'No Title'
-    link = item.find('a')['href']
-    image_url = item.find('img', class_='entry-thumb')['src']
+for item in items:
+    print("meg")
+    # title = item.find('a')['title'] if item.find('a') else 'No Title'
+    # link = item.find('a')['href']
+    # image_url = item.find('img', class_='entry-thumb')['src']
 
-    driver.get(link)
-    wait_element('time.entry-date')
-    source = driver.page_source
-    soup = BeautifulSoup(source, 'html.parser')
-    div_elements = soup.find_all('div', class_='tdb-block-inner')
-    for div in div_elements:
-        time_element = div.find('time', class_='entry-date')
-        if time_element:
-            pub_date_str = time_element['datetime']
-            pub_date = datetime.fromisoformat(pub_date_str)
-            break
+    # driver.get(link)
+    # wait_element('time.entry-date')
+    # source = driver.page_source
+    # soup = BeautifulSoup(source, 'html.parser')
+    # div_element = soup.find('div', class_='tdb-block-inner')
+    # time_element = div_element.find('time', class_='entry-date')
+    # print(time_element)
+    # pub_date_str = time_element['datetime']
+    # print(pub_date_str)
+    # pub_date = datetime.fromisoformat(pub_date_str)
 
-    fe = fg.add_entry()
-    fe.title(title)
-    fe.link(href=link)
-    fe.description(f'<img src="{image_url}"/>')
-    fe.published(pub_date)
+
+    # fe = fg.add_entry()
+    # fe.title(title)
+    # fe.link(href=link)
+    # fe.description(f'<img src="{image_url}"/>')
+    # fe.published(pub_date)
 
 # Save the RSS feed to a file
-fg.rss_file('gh-killteam-feed.xml')
+fg.rss_file('balance-feed.xml')
 driver.quit()
 

@@ -22,7 +22,7 @@ driver = webdriver.Firefox(options=firefox_options)
 
 # Load the page
 driver.get(url)
-driver.save_screenshot("screenshot.png")
+driver.save_screenshot("screenshot-wc.png")
 
 try:
     WebDriverWait(driver, 10).until(

@@ -1,4 +1,4 @@
 .venv
-wc-killteam-feed.xml
-screenshot.png
+*-feed.xml
+screenshot*
 *.log

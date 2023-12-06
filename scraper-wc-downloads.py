@@ -6,7 +6,7 @@ url = 'https://www.warhammer-community.com/kill-team-downloads/'
 
 
 scraper_instance = Scraper(headless=True, url=url)
-soup = scraper_instance.get_soup("", "div.resources-groups")
+soup = scraper_instance.get_soup("screenshot-wcd.png", "div.resources-groups")
 fg = scraper_instance.get_fg('Warhammer Community - Kill Team Balance Dataslate', 'Kill Team Balance Dataslate')
 
 # Extract Balance Dataslate

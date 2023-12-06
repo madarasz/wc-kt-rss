@@ -29,6 +29,6 @@ for item in news_items:
     scraper_instance.add_item(title, link, '', image_url, pub_date)
 
 # Save the RSS feed to a file
-fg.rss_file('gh-killteam-feed.xml')
+fg.rss_file('feed-gh-killteam.xml')
 scraper_instance.close
 

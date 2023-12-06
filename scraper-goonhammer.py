@@ -10,6 +10,7 @@ fg = scraper_instance.get_fg('Goonhammer - Kill Team', 'Kill Team posts')
 
 # Extract news items
 news_items = soup.find_all('div', class_='td-big-grid-post')
+scraper_instance.print_timer()
 
 for item in news_items:
     title = item.find('a')['title'] if item.find('a') else 'No Title'

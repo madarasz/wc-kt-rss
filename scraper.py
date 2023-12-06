@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from feedgen.feed import FeedGenerator
 import re
 from datetime import datetime
+import time
 import pytz
 
 class Scraper:
@@ -27,6 +28,7 @@ class Scraper:
         self.driver.quit()
 
     def get_soup(self, name="", wait_element="", new_url=""):
+        self.timer = time.time()
         if new_url != "": self.url = new_url
         self.driver.get(self.url)
         if name != "": self.driver.save_screenshot(f"{name}.png") 
@@ -80,5 +82,7 @@ class Scraper:
         except TimeoutException:
             print("Timed out waiting for page to load")
             self.driver.quit()
-        print(f"Opened page: {self.url}")
+        formatted_time = datetime.now().strftime('%Y.%m.%d. %H:%M:%S')
+        duration = time.time() - self.timer 
+        print(f"{formatted_time} - Opened page: {self.url} ({duration:.2f} sec)")
 

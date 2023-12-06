@@ -24,5 +24,6 @@ for item in items:
 
 # Save the RSS feed to a file
 fg.rss_file('feed-wc-dataslate.xml')
+scraper_instance.print_timer()
 
 scraper_instance.close()

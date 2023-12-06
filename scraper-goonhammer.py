@@ -31,5 +31,6 @@ for item in news_items:
 
 # Save the RSS feed to a file
 fg.rss_file('feed-gh-killteam.xml')
+scraper_instance.print_timer()
 scraper_instance.close
 

@@ -31,13 +31,22 @@ class Scraper:
     def close(self):
         self.driver.quit()
 
-    def get_soup(self, name="", wait_element="", new_url=""):
+    def get_soup(self, name="", wait_element="", new_url="", debug=False):
         self.timer = time.time()
         if new_url != "": self.url = new_url
         self.driver.get(self.url)
-        if name != "": self.driver.save_screenshot(f"{name}.png") 
-        if wait_element !="": self.wait_element(wait_element)
+        if name != "": 
+            self.driver.save_screenshot(f"{name}.png") 
+            self.name = name
+        if wait_element !="": self.wait_element(wait_element, debug)
         return BeautifulSoup(self.driver.page_source, 'html.parser')
+    
+    def print_timer(self):
+        duration = time.time() - self.timer
+        print(f"{self.get_timestamp()} - Scraped page: {self.url} ({duration:.2f} sec)")
+
+    def get_timestamp(self):
+        return datetime.now().strftime('%Y.%m.%d. %H:%M:%S')
     
     def get_fg(self, title="", description=""):
         self.fg = FeedGenerator()
@@ -68,7 +77,7 @@ class Scraper:
             pub_date = None  # In case of parsing failure
         return pub_date
 
-    def add_item(self, title, url, description, image_url, pub_date):
+    def add_item(self, title, url, description, image_url, pub_date, debug=False):
         fe = self.fg.add_entry()
         fe.title(title)
         fe.link(href=url)
@@ -76,9 +85,9 @@ class Scraper:
         fe.description(description)
         if pub_date:
             fe.published(pub_date)
-        print(f"- added entry: {title} ({pub_date})")
+        if debug: print(f"- added entry: {title} ({pub_date})")
 
-    def wait_element(self, element):
+    def wait_element(self, element, debug=False):
         try:
             WebDriverWait(self.driver, 10).until(
                     EC.presence_of_all_elements_located((By.CSS_SELECTOR, element))
@@ -86,7 +95,6 @@ class Scraper:
         except TimeoutException:
             print("Timed out waiting for page to load")
             self.driver.quit()
-        formatted_time = datetime.now().strftime('%Y.%m.%d. %H:%M:%S')
         duration = time.time() - self.timer 
-        print(f"{formatted_time} - Opened page: {self.url} ({duration:.2f} sec)")
+        if debug: print(f"{self.get_timestamp()} - Opened page: {self.url} ({duration:.2f} sec)")
 

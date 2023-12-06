@@ -18,6 +18,7 @@ for item in news_items:
 
     soup = scraper_instance.get_soup('', 'time.entry-date', link)
 
+    description = soup.find('div', class_='tdb_single_content').find('p').text.strip()
     div_elements = soup.find_all('div', class_='tdb-block-inner')
     for div in div_elements:
         time_element = div.find('time', class_='entry-date')
@@ -26,7 +27,7 @@ for item in news_items:
             pub_date = datetime.fromisoformat(pub_date_str)
             break
 
-    scraper_instance.add_item(title, link, '', image_url, pub_date)
+    scraper_instance.add_item(title, link, description, image_url, pub_date)
 
 # Save the RSS feed to a file
 fg.rss_file('feed-gh-killteam.xml')

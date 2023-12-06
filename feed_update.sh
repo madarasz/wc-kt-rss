@@ -1,5 +1,6 @@
 cd /opt/wc-kt-rss/
-python3 wc-scraper.py
-python3 goonhammer-scraper.py
-cp wc-killteam-feed.xml /var/www/alwaysberunning/public/
-cp gh-killteam-feed.xml /var/www/alwaysberunning/public/
+find ./ -name '*.log' -size +1M -exec rm {} \;
+python3 scraper-wc.py
+python3 scraper-goonhammer.py
+cp feed-wc-killteam.xml /var/www/alwaysberunning/public/
+cp feed-gh-killteam.xml /var/www/alwaysberunning/public/

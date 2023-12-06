@@ -1,4 +1,5 @@
 .venv
-*-feed.xml
+*.xml
 screenshot*
 *.log
+__pycache__

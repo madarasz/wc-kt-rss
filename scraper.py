@@ -19,6 +19,10 @@ class Scraper:
         if headless:
             self.options.add_argument("--headless")
         self.options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3")
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference("permissions.default.image", 2)
+        profile.set_preference("javascript.enabled", False)
+        self.options.profile = profile
         self.driver = webdriver.Firefox(options=self.options)
 
     def get_driver(self):

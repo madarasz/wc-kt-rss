@@ -1,4 +1,5 @@
 import { create } from 'xmlbuilder2';
+import { PuppeteerCrawlerOptions } from 'crawlee';
 
 export interface RSSItem {
     title: string;
@@ -6,6 +7,28 @@ export interface RSSItem {
     description: string;
     pubDate: string;
     imgSrc?: string;
+}
+
+export const puppeteerSettings: PuppeteerCrawlerOptions = { 
+    launchContext: {
+        launchOptions: {
+            headless: true,
+            args: [
+                '--no-sandbox', 
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--no-first-run',
+                '--no-zygote',
+                '--disable-gpu',
+                // Limit memory usage
+                '--memory-pressure-off',
+                '--single-process',
+                '--max-old-space-size=512'
+            ]
+        }
+    },
+    maxRequestsPerCrawl: 1
 }
 
 export async function generateRSSFeed(articles: RSSItem[], url: string, title: string, description: string) {

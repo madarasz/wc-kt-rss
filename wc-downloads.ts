@@ -1,14 +1,9 @@
 import { PuppeteerCrawler, Dataset } from 'crawlee';
 import fs from 'fs/promises';
-import { RSSItem, generateRSSFeed } from './helper';
+import { RSSItem, generateRSSFeed, puppeteerSettings } from './helper';
 
 const crawler = new PuppeteerCrawler({
-    launchContext: {
-        launchOptions: {
-            headless: true
-        }
-    },
-    maxRequestsPerCrawl: 1,
+    ...puppeteerSettings,
     
     async requestHandler({ page, request }) {
         console.log('### Loading Warhammer Community Downloads page');

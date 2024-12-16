@@ -1,5 +1,6 @@
 import { create } from 'xmlbuilder2';
 import { PuppeteerCrawlerOptions } from 'crawlee';
+import { Page } from 'puppeteer';
 
 export interface RSSItem {
     title: string;
@@ -50,4 +51,15 @@ export async function generateRSSFeed(articles: RSSItem[], url: string, title: s
     });
 
     return feed.end({ prettyPrint: true });
+}
+
+export async function skipResources(page: Page) {
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+        if (req.resourceType() === 'image' || req.resourceType() === 'stylesheet' || req.resourceType() === 'font') {
+            req.abort();
+        } else {
+            req.continue();
+        }
+    });
 }

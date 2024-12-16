@@ -1,12 +1,13 @@
 import { PuppeteerCrawler, Dataset } from 'crawlee';
 import fs from 'fs/promises';
-import { RSSItem, generateRSSFeed, puppeteerSettings } from './helper';
+import { RSSItem, generateRSSFeed, puppeteerSettings, skipResources } from './helper';
 
 const crawler = new PuppeteerCrawler({
     ...puppeteerSettings,
     
     async requestHandler({ page, request }) {
         console.log('### Loading Goonhammer Articles page');
+        await skipResources(page);
         
         // Wait for the news grid to be visible
         await page.waitForSelector('div.td_module_1');

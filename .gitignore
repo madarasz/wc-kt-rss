@@ -1,5 +1,9 @@
-.venv
 *.xml
 screenshot*
 *.log
+node_modules
+storage
+
+# old python stuff
 __pycache__
+.venv

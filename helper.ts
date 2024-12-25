@@ -12,20 +12,16 @@ export interface RSSItem {
 
 export const puppeteerSettings: PuppeteerCrawlerOptions = { 
     launchContext: {
+        launcher: require('puppeteer-firefox'),
         launchOptions: {
             headless: true,
             args: [
-                '--no-sandbox', 
+                '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--no-first-run',
-                '--no-zygote',
-                '--disable-gpu',
-                // Limit memory usage
                 '--memory-pressure-off',
                 '--single-process',
-                '--max-old-space-size=512'
+                '--max-old-space-size=256'
             ]
         }
     },

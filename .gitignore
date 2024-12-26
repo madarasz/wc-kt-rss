@@ -1,8 +1,7 @@
 *.xml
-screenshot*
 *.log
 node_modules
-storage
+.DS_Store
 
 # old python stuff
 __pycache__

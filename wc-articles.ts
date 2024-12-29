@@ -1,6 +1,6 @@
 import axios from 'axios';
 import fs from 'fs/promises';
-import { generateRSSFeed } from './helper';
+import { generateRSSFeed, RSSItem } from './helper';
 
 interface NewsArticle {
     title: string;
@@ -42,16 +42,19 @@ const requestBody = {
     "perPage": 12,
     "topics": []
 };
+const pageUrl = 'https://www.warhammer-community.com/en-gb/kill-team/';
+export const baseUrl = 'https://www.warhammer-community.com';
 const requestHeaders = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
     'Accept': '*/*',
     'Accept-Language': 'en-US,en;q=0.9',
-    'Referer': 'https://www.warhammer-community.com/en-gb/kill-team/',
-    'Origin': 'https://www.warhammer-community.com',
+    'Referer': pageUrl,
+    'Origin': baseUrl,
     'Content-Type': 'application/json'
 };
-const assetPrefix = 'https://assets.warhammer-community.com/';
-const rssTitle = 'Warhammer Community Kill Team News';
+export const assetPrefix = 'https://assets.warhammer-community.com/';
+export const rssTitle = 'Warhammer Community Kill Team News';
+export const rssFileName = 'kill-team-news.xml';
 
 function parseUKDate(dateStr: string): Date {
     // Format is like "13 Dec 24"
@@ -65,37 +68,50 @@ function parseUKDate(dateStr: string): Date {
     return date;
 }
 
-export async function generateNewsRSS() {
+function articleToRSSItem(item: NewsArticle): RSSItem {
+    const description = `<img src="${assetPrefix}${item.image.path}"/><p>${item.excerpt}}</p>`;
+    const pubDate = parseUKDate(item.date);
+
+    return {
+        title: item.title,
+        link: `${baseUrl}${item.uri}`,
+        description,
+        pubDate: pubDate.toUTCString()
+    };
+}
+
+interface RSSGenerationParameters {
+    jsonUrl: string;
+    pageUrl: string;
+    requestBody: Object;
+    requestHeaders: Object;
+    conversionFunction: Function;
+    rssFileName: string;
+    rssTitle: string;
+    rssDescription: string;
+}
+
+export async function generateNewsRSS(params: RSSGenerationParameters) {
     try {
         const response = await axios.post<NewsApiResponse>(
-            jsonUrl,
-            requestBody,
+            params.jsonUrl,
+            params.requestBody,
             {
-                headers: requestHeaders
+                headers: params.requestHeaders
             }
         );
 
-        const articles = response.data.news.map(item => {
-            const description = `<img src="${assetPrefix}${item.image.path}"/><p>${item.excerpt}}</p>`;
-            const pubDate = parseUKDate(item.date);
-
-            return {
-                title: item.title,
-                link: `https://www.warhammer-community.com${item.uri}`,
-                description,
-                pubDate: pubDate.toUTCString()
-            };
-        });
+        const articles = response.data.news.map(item => params.conversionFunction(item));
 
         const rssXml = await generateRSSFeed(
             articles,
-            'https://www.warhammer-community.com/en-gb/kill-team/',
-            rssTitle,
-            'Latest Kill Team news from Warhammer Community'
+            params.pageUrl,
+            params.rssTitle,
+            params.rssDescription
         );
 
-        await fs.writeFile('kill-team-news.xml', rssXml);
-        console.log(`${rssTitle} RSS feed generated successfully!`);
+        await fs.writeFile(params.rssFileName, rssXml);
+        console.log(`${params.rssTitle} RSS feed generated successfully!`);
 
     } catch (error: any) {
         if (error?.response) {
@@ -112,6 +128,19 @@ export async function generateNewsRSS() {
     }
 }
 
+export async function main() {
+    await generateNewsRSS({
+        jsonUrl: jsonUrl,
+        pageUrl: pageUrl,
+        requestBody: requestBody,
+        requestHeaders: requestHeaders,
+        conversionFunction: articleToRSSItem,
+        rssFileName: rssFileName,
+        rssTitle: rssTitle,
+        rssDescription: `Latest ${rssTitle} articles`
+    });
+}
+
 if (require.main === module) {
-    generateNewsRSS();
+    main();
 }

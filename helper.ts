@@ -5,7 +5,6 @@ export interface RSSItem {
     link: string;
     description: string;
     pubDate: string;
-    imgSrc?: string;
 }
 
 interface RSSChannel {

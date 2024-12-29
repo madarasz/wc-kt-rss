@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import { parseString } from 'xml2js';
 import { promisify } from 'util';
-import { generateNewsRSS } from '../wc-articles';  // You'll need to export main
+import { main, rssFileName, rssTitle, assetPrefix } from '../wc-articles';  // You'll need to export main
 import { RSSFeed } from '../helper';
 
 const parseXml = promisify(parseString);
@@ -10,16 +10,16 @@ describe('Warhammer Community Articles RSS Generator E2E', () => {
     it('should generate valid RSS feed with at least 5 articles', async () => {
         // Clean up any existing file first
         try {
-            await fs.unlink('kill-team-news.xml');
+            await fs.unlink(rssFileName);
         } catch (error) {
             // Ignore error if file doesn't exist
         }
 
         // Run the main function
-        await generateNewsRSS();
+        await main();
 
         // Read the generated file
-        const rssContent = await fs.readFile('kill-team-news.xml', 'utf-8');
+        const rssContent = await fs.readFile(rssFileName, 'utf-8');
         
         // Parse the XML
         const result = await parseXml(rssContent) as RSSFeed;
@@ -30,7 +30,7 @@ describe('Warhammer Community Articles RSS Generator E2E', () => {
         
         // Check channel metadata
         const channel = result.rss.channel[0];
-        expect(channel.title[0]).toBe('Warhammer Community Kill Team News');
+        expect(channel.title[0]).toBe(rssTitle);
         
         // Check items
         const items = channel.channel.map(ch => ch.item[0]);
@@ -45,6 +45,6 @@ describe('Warhammer Community Articles RSS Generator E2E', () => {
         
         // Check item content
         expect(firstItem.link[0]).toMatch(/^https:\/\/www\.warhammer-community\.com/);
-        expect(firstItem.description[0]).toMatch(/<img src="https:\/\/assets\.warhammer-community\.com/);
+        expect(firstItem.description[0]).toMatch(new RegExp(`<img src="${assetPrefix}`));
     }, 30000);  // Increase timeout to 30s for network request
 });

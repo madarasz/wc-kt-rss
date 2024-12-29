@@ -1,3 +1,4 @@
+feed_update.sh
 *.xml
 *.log
 node_modules

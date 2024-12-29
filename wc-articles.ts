@@ -25,6 +25,34 @@ interface NewsApiResponse {
     };
 }
 
+const jsonUrl = 'https://www.warhammer-community.com/api/search/news/';
+const requestBody = {
+    "sortBy": "date_desc",
+    "category": "",
+    "collections": [
+        "articles",
+        "videos"
+    ],
+    "game_systems": [
+        "kill-team"
+    ],
+    "index": "news",
+    "locale": "en-gb",
+    "page": 0,
+    "perPage": 12,
+    "topics": []
+};
+const requestHeaders = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+    'Accept': '*/*',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Referer': 'https://www.warhammer-community.com/en-gb/kill-team/',
+    'Origin': 'https://www.warhammer-community.com',
+    'Content-Type': 'application/json'
+};
+const assetPrefix = 'https://assets.warhammer-community.com/';
+const rssTitle = 'Warhammer Community Kill Team News';
+
 function parseUKDate(dateStr: string): Date {
     // Format is like "13 Dec 24"
     const [day, month, year] = dateStr.split(' ');
@@ -37,40 +65,18 @@ function parseUKDate(dateStr: string): Date {
     return date;
 }
 
-async function main() {
+export async function generateNewsRSS() {
     try {
         const response = await axios.post<NewsApiResponse>(
-            'https://www.warhammer-community.com/api/search/news/',
+            jsonUrl,
+            requestBody,
             {
-                "sortBy": "date_desc",
-                "category": "",
-                "collections": [
-                    "articles",
-                    "videos"
-                ],
-                "game_systems": [
-                    "kill-team"
-                ],
-                "index": "news",
-                "locale": "en-gb",
-                "page": 0,
-                "perPage": 12,
-                "topics": []
-            },
-            {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-                    'Accept': '*/*',
-                    'Accept-Language': 'en-US,en;q=0.9',
-                    'Referer': 'https://www.warhammer-community.com/en-gb/kill-team/',
-                    'Origin': 'https://www.warhammer-community.com',
-                    'Content-Type': 'application/json'
-                }
+                headers: requestHeaders
             }
         );
 
         const articles = response.data.news.map(item => {
-            const description = `<img src="https://assets.warhammer-community.com/${item.image.path}"/><p>${item.excerpt}}</p>`;
+            const description = `<img src="${assetPrefix}${item.image.path}"/><p>${item.excerpt}}</p>`;
             const pubDate = parseUKDate(item.date);
 
             return {
@@ -84,12 +90,12 @@ async function main() {
         const rssXml = await generateRSSFeed(
             articles,
             'https://www.warhammer-community.com/en-gb/kill-team/',
-            'Warhammer Community Kill Team News',
+            rssTitle,
             'Latest Kill Team news from Warhammer Community'
         );
 
         await fs.writeFile('kill-team-news.xml', rssXml);
-        console.log('RSS feed generated successfully!');
+        console.log(`${rssTitle} RSS feed generated successfully!`);
 
     } catch (error: any) {
         if (error?.response) {
@@ -106,4 +112,6 @@ async function main() {
     }
 }
 
-main();
+if (require.main === module) {
+    generateNewsRSS();
+}

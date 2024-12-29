@@ -8,6 +8,21 @@ export interface RSSItem {
     imgSrc?: string;
 }
 
+interface RSSChannel {
+    title: string[];
+    link: string[];
+    description: string[];
+    channel: Array<{
+        item: RSSItem[];
+    }>;
+}
+
+export interface RSSFeed {
+    rss: {
+        channel: RSSChannel[];
+    };
+}
+
 export async function generateRSSFeed(articles: RSSItem[], url: string, title: string, description: string) {
     const feed = create({ version: '1.0' })
         .ele('rss', { version: '2.0' })

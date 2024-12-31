@@ -3,6 +3,7 @@ feed_update.sh
 *.log
 node_modules
 .DS_Store
+coverage
 
 # old python stuff
 __pycache__

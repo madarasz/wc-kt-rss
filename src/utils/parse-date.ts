@@ -10,7 +10,7 @@ export function parseMonthWithLettersDate(dateStr: string): Date {
 
 }
 
-// Format is like "13/12/24"
+// Format is like "13/12/2024"
 export function parseNumericDate(dateStr: string): Date {
     const [day, month, year] = dateStr.split('/').map(num => parseInt(num, 10));
     const date = new Date(Date.UTC(year, month - 1, day, 9, 0, 0));

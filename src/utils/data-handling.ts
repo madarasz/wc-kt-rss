@@ -3,7 +3,7 @@ import axios from 'axios';
 import fs from 'fs/promises';
 import { RSSItem } from './output-parameters';
 
-interface RSSGenerationParameters<T> {
+export interface RSSGenerationParameters<T> {
     jsonUrl: string;
     pageUrl: string;
     requestBody: Object;

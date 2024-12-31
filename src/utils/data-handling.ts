@@ -1,28 +1,7 @@
 import { create } from 'xmlbuilder2';
 import axios from 'axios';
 import fs from 'fs/promises';
-
-export interface RSSItem {
-    title: string;
-    link: string;
-    description: string;
-    pubDate: string;
-}
-
-interface RSSChannel {
-    title: string[];
-    link: string[];
-    description: string[];
-    channel: Array<{
-        item: RSSItem[];
-    }>;
-}
-
-export interface RSSFeed {
-    rss: {
-        channel: RSSChannel[];
-    };
-}
+import { RSSItem } from './output-parameters';
 
 interface RSSGenerationParameters<T> {
     jsonUrl: string;

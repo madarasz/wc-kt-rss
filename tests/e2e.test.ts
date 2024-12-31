@@ -3,8 +3,8 @@ import { parseString } from 'xml2js';
 import { promisify } from 'util';
 import { main as articlesMain, rssFileName as articlesRssFileName, rssTitle as articlesRssTitle} from '../src/wc-articles';
 import { main as rulesMain, rssFileName as rulesRssFileName, rssTitle as rulesRssTitle} from '../src/wc-rules';  // You'll need to export main
-import { assetPrefix, baseUrl } from '../src/constants';
-import { RSSFeed } from '../src/data-handling';
+import { assetPrefix, baseUrl } from '../src/utils/constants';
+import { RSSFeed } from '../src/utils/output-parameters';
 
 const parseXml = promisify(parseString);
 

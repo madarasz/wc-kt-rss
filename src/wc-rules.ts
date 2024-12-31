@@ -1,41 +1,7 @@
-import { generateData } from './data-handling';
-import { requestHeaders, assetPrefix } from './constants';
-
-interface KillTeamDownload {
-    title: string;
-    game_systems: string;
-    download_languages: string;
-    download_categories: {
-        slug: string;
-        order: number | null;
-        open_by_default: boolean;
-        title: string;
-    }[];
-    topics: string[];
-    locale: string;
-    date: number | string;
-    id: {
-        title: string;
-        slug: string;
-        file: string;
-        file_size: string;
-        last_updated: string;
-        new: boolean;
-    };
-}
-
-interface DownloadsApiResponse {
-    hits: KillTeamDownload[];
-    totalHits: number;
-    totalPages: number;
-}
-
-function parseUKDate(dateStr: string): Date {
-    const [day, month, year] = dateStr.split('/').map(num => parseInt(num, 10));
-    // Create date in UTC directly
-    const date = new Date(Date.UTC(year, month - 1, day, 9, 0, 0));
-    return date;
-}
+import { generateData } from './utils/data-handling';
+import { requestHeaders, assetPrefix } from './utils/constants';
+import { parseNumericDate } from './utils/parse-date';
+import { DownloadsApiResponse } from './utils/input-parameters';
 
 const jsonUrl = 'https://www.warhammer-community.com/api/search/downloads/';
 const pageUrl = 'https://www.warhammer-community.com/en-gb/downloads/kill-team/';
@@ -59,7 +25,7 @@ export async function main() {
             title: item.id.title,
             link: `${assetPrefix}${item.id.file}`,
             description: `${item.id.title} - Last updated: ${item.id.last_updated}${item.id.new ? ' (NEW)' : ''}`,
-            pubDate: parseUKDate(item.id.last_updated).toUTCString()
+            pubDate: parseNumericDate(item.id.last_updated).toUTCString()
         })),
         rssFileName: rssFileName,
         rssTitle: rssTitle,

@@ -10,8 +10,11 @@
   "description": "",
   "dependencies": {
     "@types/axios": "^0.9.36",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.2",
     "axios": "^1.7.9",
+    "fast-xml-parser": "^4.5.1",
+    "js-yaml": "^4.1.0",
     "typescript": "^5.7.2",
     "xmlbuilder2": "^3.1.1"
   },

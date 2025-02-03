@@ -5,7 +5,7 @@
 Generates the RSS feed for 
 - [Warhammer Community Kill Team articles](https://www.warhammer-community.com/en-gb/kill-team/)
 - [Warhammer Community Kill Team downloads](https://www.warhammer-community.com/en-gb/downloads/kill-team/)
-Combines various YouTube RSS feeds into a single file. List of YouTube feeds is in `yt-channels.yml`.
+- Combines various YouTube RSS feeds into a single file. List of YouTube feeds is in `yt-channels.yml`.
 
 The output is regularly being uploaded to:
 - [https://alwaysberunning.net/kt-rss/kill-team-news.xml](https://alwaysberunning.net/kt-rss/kill-team-news.xml)

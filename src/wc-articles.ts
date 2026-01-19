@@ -18,7 +18,9 @@ const requestBody = {
     "locale": "en-gb",
     "page": 0,
     "perPage": 12,
-    "topics": []
+    "topics": [
+      "kill-team"
+    ]
 };
 const pageUrl = 'https://www.warhammer-community.com/en-gb/kill-team/';
 export const rssTitle = 'Warhammer Community Kill Team News';

@@ -6,11 +6,10 @@ import { DownloadsApiResponse } from './utils/input-parameters';
 const jsonUrl = 'https://www.warhammer-community.com/api/search/downloads/';
 const pageUrl = 'https://www.warhammer-community.com/en-gb/downloads/kill-team/';
 const requestBody = {
-    index: "downloads",
+    index: "downloads_v2",
     searchTerm: "",
-    locale: "en-gb",
     gameSystem: "kill-team",
-    language: "british-english"
+    language: "english"
 };
 export const rssFileName = 'output/kill-team-downloads.xml';
 export const rssTitle = 'Warhammer Community Kill Team Downloads';
